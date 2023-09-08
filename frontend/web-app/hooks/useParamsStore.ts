@@ -1,4 +1,5 @@
-import { create } from "zustand"
+import { createWithEqualityFn } from 'zustand/traditional'
+import { shallow } from 'zustand/shallow';
 
 type State = {
     pageNumber: number
@@ -30,7 +31,7 @@ const initialState: State = {
     winner: undefined
 }
 
-export const useParamsStore = create<State & Actions>()((set) => ({
+export const useParamsStore = createWithEqualityFn<State & Actions>()((set) => ({
     ...initialState,
 
     setParams: (newParams: Partial<State>) => {
@@ -48,4 +49,4 @@ export const useParamsStore = create<State & Actions>()((set) => ({
     setSearchValue: (value: string) => {
         set({searchValue: value})
     }
-}))
+}), shallow)
