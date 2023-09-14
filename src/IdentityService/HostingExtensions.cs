@@ -1,3 +1,4 @@
+using Duende.IdentityServer.Services;
 using IdentityService.Data;
 using IdentityService.Models;
 using IdentityService.Services;
@@ -63,6 +64,18 @@ namespace IdentityService
 
             app.UseStaticFiles();
             app.UseRouting();
+
+            if (app.Environment.IsProduction())
+            {
+                app.Use(async (ctx, next) =>
+                {
+                    var serverUrls = ctx.RequestServices.GetRequiredService<IServerUrls>();
+                    serverUrls.Origin = serverUrls.Origin = "https://id.vnmp.at.tw";
+
+                    await next();
+                });
+            }
+
             app.UseIdentityServer();
             app.UseAuthorization();
 
